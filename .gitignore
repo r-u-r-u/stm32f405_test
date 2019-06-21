@@ -1,0 +1,7 @@
+Drivers/
+.vscode/
+f405_test_es.code-workspace
+vc140.pdb
+build/*.o
+build/*.lst
+build/*.d
