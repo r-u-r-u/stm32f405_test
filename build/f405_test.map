@@ -65,6 +65,33 @@ Discarded input sections
  .ARM.exidx     0x00000000        0x8 c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu/crt0.o
  .ARM.attributes
                 0x00000000       0x20 c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu/crt0.o
+ .text          0x00000000        0x0 build/QEI.o
+ .data          0x00000000        0x0 build/QEI.o
+ .bss           0x00000000        0x0 build/QEI.o
+ .text._ZN3QEIC2Ev
+                0x00000000        0xc build/QEI.o
+ .ARM.extab.text._ZN3QEIC2Ev
+                0x00000000        0x0 build/QEI.o
+ .ARM.exidx.text._ZN3QEIC2Ev
+                0x00000000        0x8 build/QEI.o
+ .text._ZN3QEI5resetEv
+                0x00000000        0xc build/QEI.o
+ .ARM.extab.text._ZN3QEI5resetEv
+                0x00000000        0xc build/QEI.o
+ .ARM.exidx.text._ZN3QEI5resetEv
+                0x00000000        0x8 build/QEI.o
+ .debug_info    0x00000000      0x149 build/QEI.o
+ .debug_abbrev  0x00000000      0x100 build/QEI.o
+ .debug_loc     0x00000000       0x41 build/QEI.o
+ .debug_aranges
+                0x00000000       0x28 build/QEI.o
+ .debug_ranges  0x00000000       0x18 build/QEI.o
+ .debug_line    0x00000000       0x5c build/QEI.o
+ .debug_str     0x00000000      0x14b build/QEI.o
+ .comment       0x00000000       0x6f build/QEI.o
+ .debug_frame   0x00000000       0x3c build/QEI.o
+ .ARM.attributes
+                0x00000000       0x39 build/QEI.o
  .text          0x00000000        0x0 build/main.o
  .data          0x00000000        0x0 build/main.o
  .bss           0x00000000        0x0 build/main.o
@@ -3137,6 +3164,7 @@ Linker script and memory map
 LOAD c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7e-m/fpu/crti.o
 LOAD c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7e-m/fpu/crtbegin.o
 LOAD c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu/crt0.o
+LOAD build/QEI.o
 LOAD build/main.o
 LOAD build/stm32f4xx_hal_tim_ex.o
 LOAD build/stm32f4xx_hal_flash_ramfunc.o
@@ -4620,6 +4648,9 @@ OTG_HS_IRQHandler                                 build/startup_stm32f405xx.o
 OTG_HS_WKUP_IRQHandler                            build/startup_stm32f405xx.o
 PVD_IRQHandler                                    build/startup_stm32f405xx.o
 PendSV_Handler                                    build/stm32f4xx_it.o
+QEI::QEI()                                        build/QEI.o
+QEI::QEI()                                        build/QEI.o
+QEI::reset()                                      build/QEI.o
 RCC_IRQHandler                                    build/startup_stm32f405xx.o
 RTC_Alarm_IRQHandler                              build/startup_stm32f405xx.o
 RTC_WKUP_IRQHandler                               build/startup_stm32f405xx.o
@@ -4745,6 +4776,7 @@ __aeabi_unwind_cpp_pr1                            c:/users/wako/workspace/tools/
                                                   build/stm32f4xx_hal_tim.o
                                                   build/stm32f4xx_hal_tim_ex.o
                                                   build/main.o
+                                                  build/QEI.o
 __aeabi_unwind_cpp_pr2                            c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7e-m/fpu\libgcc.a(unwind-arm.o)
 __bss_end__                                       c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu/crt0.o
 __bss_start__                                     c:/users/wako/workspace/tools/gnutoolsarmembedded/5.42016q3/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu/crt0.o
@@ -4900,3 +4932,4 @@ software_init_hook                                c:/users/wako/workspace/tools/
 uwTick                                            build/stm32f4xx_hal.o
 uwTickFreq                                        build/stm32f4xx_hal.o
 uwTickPrio                                        build/stm32f4xx_hal.o
+vtable for QEI                                    build/QEI.o
