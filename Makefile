@@ -69,6 +69,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c\
 $(wildcard Src/*.c)
 
 CPP_SOURCES =\
+$(wildcard Library/*/*.cpp)\
 $(wildcard Src/*.cpp)
 
 # ASM sources
@@ -126,6 +127,7 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -IInc \
+-ILibrary \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
