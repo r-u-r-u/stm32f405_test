@@ -69,7 +69,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c\
 $(wildcard Src/*.c)
 
 CPP_SOURCES =\
-$(wildcard Library/*/*.cpp)\
+$(wildcard Library/Timer/*/*.cpp)\
 $(wildcard Src/*.cpp)
 
 # ASM sources

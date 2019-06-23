@@ -40,7 +40,7 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include <vector>
-#include "../Library/Timer/QEI.h"
+#include "../Library/Timer/QEI/QEI_Timx.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -98,7 +98,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   /* USER CODE END 1 */
-  std::vector<int> vec;
   /* MCU Configuration----------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -119,7 +118,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C2_Init();
   MX_ADC1_Init();
-  MX_TIM2_Init();
+  //MX_TIM2_Init();
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM3_Init();
@@ -128,14 +127,16 @@ int main(void)
   MX_TIM14_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+QEI *qei_tim2;
+qei_tim2 = new QEI_Timx(TIM2,0,0);
+qei_tim2->start();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+    qei_tim2->read();
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -249,41 +250,6 @@ static void MX_I2C2_Init(void)
   hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   if (HAL_I2C_Init(&hi2c2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
-/* TIM2 init function */
-static void MX_TIM2_Init(void)
-{
-
-  TIM_Encoder_InitTypeDef sConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
-  if (HAL_TIM_Encoder_Init(&htim2, &sConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
