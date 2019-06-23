@@ -5,3 +5,5 @@ vc140.pdb
 build/*.o
 build/*.lst
 build/*.d
+build/f405_test.map
+build/f405_test.elf
