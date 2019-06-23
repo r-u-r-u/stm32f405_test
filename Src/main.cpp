@@ -41,6 +41,8 @@
 #include "stm32f4xx_hal.h"
 #include <vector>
 #include "../Library/Timer/QEI/QEI_Timx.h"
+#include "../Library/GPIO/Output.h"
+#include "../Library/GPIO/Input.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -115,7 +117,7 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
+  //MX_GPIO_Init();
   MX_I2C2_Init();
   MX_ADC1_Init();
   //MX_TIM2_Init();
@@ -127,15 +129,23 @@ int main(void)
   MX_TIM14_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-QEI *qei_tim2;
-qei_tim2 = new QEI_Timx(TIM2,0,0);
-qei_tim2->start();
+  GPIO *InA,*InB;
+  GPIO *OutB;
+  InA = new Input(GPIOA,GPIO_PIN_11);
+  InB = new Input(GPIOB,GPIO_PIN_12);
+  OutB = new Output(GPIOB,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13|GPIO_PIN_14 
+                          |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
+  QEI *qei_tim2;
+  qei_tim2 = new QEI_Timx(TIM2,0,0);
+  qei_tim2->start();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    OutB->set(GPIO::PIN::PIN_1,InA->read(GPIO::PIN::PIN_11));
+    OutB->set(GPIO::PIN::PIN_2,InB->read(GPIO::PIN::PIN_12));
     qei_tim2->read();
   /* USER CODE END WHILE */
 
