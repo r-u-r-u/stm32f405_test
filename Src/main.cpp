@@ -40,6 +40,7 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include <vector>
+#include "../Library/Timer/QEI.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -86,18 +87,6 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-template<typename T> 
-T add(T a,T b){
-  return a+b;
-}
-template <typename T>
-class myclass{
-private:
-  myclass(){};
-  ~myclass(){};
-public:
-    T value;
-};
 /* USER CODE END 0 */
 
 /**
