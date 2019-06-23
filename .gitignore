@@ -7,3 +7,5 @@ build/*.lst
 build/*.d
 build/f405_test.map
 build/f405_test.elf
+build/f405_test.hex
+build/f405_test.bin
