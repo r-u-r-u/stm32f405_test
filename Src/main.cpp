@@ -41,6 +41,7 @@
 #include "stm32f4xx_hal.h"
 #include <vector>
 #include "../Library/Timer/QEI/QEI_Timx.h"
+#include "../Library/Timer/PWM/PWM_Timx_Simple.h"
 #include "../Library/GPIO/Output.h"
 #include "../Library/GPIO/Input.h"
 /* USER CODE BEGIN Includes */
@@ -138,6 +139,11 @@ int main(void)
   QEI *qei_tim2;
   qei_tim2 = new QEI_Timx(TIM2,0,0);
   qei_tim2->start();
+
+  PWM *pwm_tim5;
+  pwm_tim5 = new PWM_Timx_Simple(TIM5,0,0);
+  pwm_tim5->start(TIM_CHANNEL_1);
+  pwm_tim5->start(TIM_CHANNEL_2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -146,6 +152,8 @@ int main(void)
   {
     OutB->set(GPIO::PIN::PIN_1,InA->read(GPIO::PIN::PIN_11));
     OutB->set(GPIO::PIN::PIN_2,InB->read(GPIO::PIN::PIN_12));
+    pwm_tim5->output(TIM_CHANNEL_1,50);
+    pwm_tim5->output(TIM_CHANNEL_2,50);
     qei_tim2->read();
   /* USER CODE END WHILE */
 
