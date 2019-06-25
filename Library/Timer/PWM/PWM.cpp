@@ -15,3 +15,6 @@ void PWM::set_channel(uint32_t channel){
 }
 void PWM::output(uint32_t channel,float duty){
 }
+void PWM::gpio_init(){
+    
+}

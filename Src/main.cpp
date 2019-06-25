@@ -82,7 +82,7 @@ static void MX_TIM13_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_TIM4_Init(void);
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+__weak void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -119,16 +119,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   //MX_GPIO_Init();
-  MX_I2C2_Init();
-  MX_ADC1_Init();
-  //MX_TIM2_Init();
-  MX_TIM5_Init();
-  MX_TIM8_Init();
-  MX_TIM3_Init();
-  MX_USART1_UART_Init();
-  MX_TIM13_Init();
-  MX_TIM14_Init();
-  MX_TIM4_Init();
+  // MX_I2C2_Init();
+  // MX_ADC1_Init();
+  //  MX_TIM2_Init();
+  //  MX_TIM5_Init();
+  // MX_TIM8_Init();
+  //  MX_TIM3_Init();
+  // MX_USART1_UART_Init();
+  // MX_TIM13_Init();
+  // MX_TIM14_Init();
+  // MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   GPIO *InA,*InB;
   GPIO *OutB;
@@ -136,25 +136,33 @@ int main(void)
   InB = new Input(GPIOB,GPIO_PIN_12);
   OutB = new Output(GPIOB,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13|GPIO_PIN_14 
                           |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
-  QEI *qei_tim2;
-  qei_tim2 = new QEI_Timx(TIM2,0,0);
-  qei_tim2->start();
+  // QEI *qei_tim2;
+  // qei_tim2 = new QEI_Timx(TIM2,0,0);
+  // qei_tim2->start();
 
   PWM *pwm_tim5;
-  pwm_tim5 = new PWM_Timx_Simple(TIM5,0,0);
-  pwm_tim5->start(TIM_CHANNEL_1);
-  pwm_tim5->start(TIM_CHANNEL_2);
+  pwm_tim5 = new PWM_Timx_Simple(TIM5,0,800);
+  pwm_tim5->set_channel(TIM_CHANNEL_3);
+  pwm_tim5->set_channel(TIM_CHANNEL_4);
+  pwm_tim5->gpio_init();
+  PWM *pwm_buz;
+  pwm_buz = new PWM_Timx_Simple(TIM3,0,4000);
+  pwm_buz->set_channel(TIM_CHANNEL_3);
+  pwm_buz->gpio_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    OutB->set(GPIO::PIN::PIN_1,InA->read(GPIO::PIN::PIN_11));
-    OutB->set(GPIO::PIN::PIN_2,InB->read(GPIO::PIN::PIN_12));
-    pwm_tim5->output(TIM_CHANNEL_1,50);
-    pwm_tim5->output(TIM_CHANNEL_2,50);
-    qei_tim2->read();
+    OutB->set(GPIO::PIN::PIN_15,InA->read(GPIO::PIN::PIN_11));
+    OutB->set(GPIO::PIN::PIN_14,InB->read(GPIO::PIN::PIN_12));
+    if(InA->read(GPIO::PIN::PIN_11)){
+      pwm_buz->output(TIM_CHANNEL_3,0.1);
+    }
+    pwm_tim5->output(TIM_CHANNEL_3,0.5);
+    pwm_tim5->output(TIM_CHANNEL_4,0.5);
+    // qei_tim2->read();
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
