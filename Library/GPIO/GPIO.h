@@ -3,9 +3,9 @@
 
 class GPIO{
 protected:
-    bool state;
+    bool state[15];
 public:
-    enum class PIN{
+    enum class PIN : uint16_t{
         PIN_1 = GPIO_PIN_1,
         PIN_2 = GPIO_PIN_2,
         PIN_3 = GPIO_PIN_3,
@@ -29,4 +29,5 @@ public:
     virtual void off(PIN pin);
     virtual void toggle(PIN pin);
     virtual bool read(PIN pin);
+    uint8_t pin_num(PIN pin);
 };
