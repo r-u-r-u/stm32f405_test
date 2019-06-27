@@ -21,6 +21,14 @@ Output::Output(GPIO_TypeDef *port,uint16_t pin){
 }
 Output::~Output(){
 }
+void Output::on(PIN pin){
+    HAL_GPIO_WritePin(_port,static_cast<uint16_t>(pin),GPIO_PIN_SET);
+    state[pin_num(pin)] = true;
+}
+void Output::off(PIN pin){
+    HAL_GPIO_WritePin(_port,static_cast<uint16_t>(pin),GPIO_PIN_RESET);
+    state[pin_num(pin)] = false;
+}
 void Output::set(PIN pin,bool _state){
     if(_state){
         on(pin);
@@ -28,16 +36,8 @@ void Output::set(PIN pin,bool _state){
         off(pin);
     }
 }
-void Output::on(PIN pin){
-    HAL_GPIO_WritePin(_port,static_cast<uint16_t>(pin),GPIO_PIN_SET);
-    state = true;
-}
-void Output::off(PIN pin){
-    HAL_GPIO_WritePin(_port,static_cast<uint16_t>(pin),GPIO_PIN_RESET);
-    state = false;
-}
 void Output::toggle(PIN pin){
-    if(state){
+    if(state[pin_num(pin)]){
         off(pin);
     }else{
         on(pin);
