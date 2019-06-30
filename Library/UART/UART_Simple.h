@@ -1,14 +1,12 @@
 #pragma once
-#include "stm32f4xx_hal.h"
+#include "UART.h"
 
-class UART{
+class UART_Simple:public UART{
 public:
-    UART();
-    virtual ~UART();
+    UART_Simple(USART_TypeDef *uartx);
+    virtual ~UART_Simple();
     virtual void _putc(uint8_t c);
     virtual uint8_t _getc();
     virtual void _puts(uint8_t *c);
     virtual void _gets(uint8_t *c);
-protected:
-    UART_HandleTypeDef huart;
 };
