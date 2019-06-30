@@ -1,6 +1,6 @@
 #include "../Library/Timer/QEI/QEI_Timx.h"
 
-QEI_Timx::QEI_Timx(TIM_TypeDef *timx,uint32_t prescaler,uint32_t period){
+QEI_Timx::QEI_Timx(TIM_TypeDef *timx,uint32_t prescaler,uint32_t period):htim(){
 
     TIM_Encoder_InitTypeDef sConfig;
     TIM_MasterConfigTypeDef sMasterConfig;
@@ -10,7 +10,7 @@ QEI_Timx::QEI_Timx(TIM_TypeDef *timx,uint32_t prescaler,uint32_t period){
     htim.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim.Init.Period = period;
     htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+    sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
     sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
     sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
     sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
