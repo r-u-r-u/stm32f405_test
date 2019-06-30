@@ -71,6 +71,7 @@ $(wildcard Src/*.c)
 CPP_SOURCES =\
 $(wildcard Library/Timer/*/*.cpp)\
 $(wildcard Library/GPIO/*.cpp)\
+$(wildcard Library/UART/*.cpp)\
 $(wildcard Src/*.cpp)
 
 # ASM sources
@@ -203,7 +204,7 @@ $(BUILD_DIR):
 # clean up
 #######################################
 clean:
-	-rm -fR .dep $(BUILD_DIR)
+	-rd /s /q $(BUILD_DIR)
   
 #######################################
 # dependencies
