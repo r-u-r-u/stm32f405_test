@@ -4,7 +4,6 @@
 PWM::PWM(){
 }
 PWM::~PWM(){
-
 }
 void PWM::start(uint32_t channel){
 }

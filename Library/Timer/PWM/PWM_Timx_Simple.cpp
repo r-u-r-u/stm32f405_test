@@ -19,6 +19,20 @@ PWM_Timx_Simple::PWM_Timx_Simple(TIM_TypeDef *timx,uint32_t prescaler,uint32_t p
     {
         _Error_Handler(__FILE__, __LINE__);
     }
+    if(timx == TIM8){
+        TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
+        sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+        sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+        sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+        sBreakDeadTimeConfig.DeadTime = 0;
+        sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+        sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+        sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+        if (HAL_TIMEx_ConfigBreakDeadTime(&htim, &sBreakDeadTimeConfig) != HAL_OK)
+        {
+        _Error_Handler(__FILE__, __LINE__);
+        }
+    }
     HAL_TIM_MspPostInit(&htim);
 }
 PWM_Timx_Simple::~PWM_Timx_Simple(){
