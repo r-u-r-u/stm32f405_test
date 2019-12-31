@@ -72,6 +72,7 @@ CPP_SOURCES =\
 $(wildcard Library/Timer/*/*.cpp)\
 $(wildcard Library/GPIO/*.cpp)\
 $(wildcard Library/UART/*.cpp)\
+$(wildcard Library/I2C/*.cpp)\
 $(wildcard Src/*.cpp)
 
 # ASM sources
