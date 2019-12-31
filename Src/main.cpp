@@ -44,6 +44,7 @@
 #include "../Library/GPIO/Output.h"
 #include "../Library/GPIO/Input.h"
 #include "../Library/UART/UART_Simple.h"
+#include "../Library/I2C/I2C2.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -73,6 +74,7 @@ __weak void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
   *
   * @retval None
   */
+I2C_HandleTypeDef hi2c2;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -101,25 +103,106 @@ int main(void)
   InB = new Input(GPIOB,GPIO_PIN_12);
   OutB = new Output(GPIOB,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13|GPIO_PIN_14 
                           |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
-  QEI *qei_tim2;
-  qei_tim2=new QEI_Timx(TIM2,0,65535);
-  qei_tim2->start();
+  // QEI *qei_tim2;
+  // qei_tim2=new QEI_Timx(TIM2,0,65535);
+  // qei_tim2->start();
   QEI *qei_tim3;
-  qei_tim3=new QEI_Timx(TIM3,0,65535);
+  // qei_tim3=new QEI_Timx(TIM3,0,65535);
   qei_tim3->start();
+	uint8_t read=0;
+	uint8_t address=0x75;//WHO_AM_I
+	uint8_t config=0x12;
+	uint8_t set[]={0x1A,0x12};
+	uint8_t dat=0x00;
 
-
-  PWM *pwm_tim5;
-  pwm_tim5 = new PWM_Timx_Simple(TIM5,0,800);
-  pwm_tim5->set_channel(TIM_CHANNEL_3);
-  pwm_tim5->set_channel(TIM_CHANNEL_4);
+  // PWM *pwm_tim5;
+  // pwm_tim5 = new PWM_Timx_Simple(TIM5,0,800);
+  // pwm_tim5->set_channel(TIM_CHANNEL_3);
+  // pwm_tim5->set_channel(TIM_CHANNEL_4);
   PWM *pwm_tim8;
   pwm_tim8 = new PWM_Timx_Simple(TIM8,0,800);
   pwm_tim8->set_channel(TIM_CHANNEL_3);
   pwm_tim8->set_channel(TIM_CHANNEL_4);
-  PWM *pwm_buz;
-  pwm_buz = new PWM_Timx_Simple(TIM1,0,4000);
-  pwm_buz->set_channel(TIM_CHANNEL_2);
+  // PWM *pwm_buz;
+  // pwm_buz = new PWM_Timx_Simple(TIM1,0,4000);
+  // pwm_buz->set_channel(TIM_CHANNEL_2);
+
+  /* USER CODE BEGIN I2C2_MspInit 0 */
+
+  /* USER CODE END I2C2_MspInit 0 */
+  
+    /**I2C2 GPIO Configuration    
+    PB10     ------> I2C2_SCL
+    PB11     ------> I2C2_SDA 
+    */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /* I2C2 clock enable */
+    __HAL_RCC_I2C2_CLK_ENABLE();
+  /* USER CODE BEGIN I2C2_MspInit 1 */
+
+  /* USER CODE END I2C2_MspInit 1 */
+  
+  HAL_I2C_Mem_Read(&hi2c2,0xD0/*device ID*/,0x75/*WHO_AM_I*/,I2C_MEMADD_SIZE_8BIT/*Memory Address Size*/,&read/*Data Buffer*/,1,10);
+	if( read == 0x68 ){
+//			HAL_GPIO_WritePin(GPIO_PIN_1,GPIO_PIN_1,GPIO_PIN_SET);
+//if 'read' have correct data
+		//wakeup sensor
+		HAL_I2C_Mem_Write(&hi2c2,0xD0,0x6B,I2C_MEMADD_SIZE_8BIT,&dat,1,10);
+		HAL_I2C_Mem_Read(&hi2c2 ,0xD0,0x6B,I2C_MEMADD_SIZE_8BIT,&read,1,10);
+		//configure sensor
+		HAL_I2C_Mem_Write(&hi2c2,0xD0,0x1a,I2C_MEMADD_SIZE_8BIT,&config,1,10);
+		HAL_I2C_Mem_Read(&hi2c2,0xD0,0x1a,I2C_MEMADD_SIZE_8BIT,&read,1,10);
+		if(read==0x12){
+//if 'read' have correct data
+			HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET);
+		}else{/*read == 0x12*/
+//if 'read' have wrong data
+			HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);
+		}
+	}else{/*read == 0x68*/
+//if 'read' have wrong data
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);
+	}
+  // I2C *i2c_gyro;
+  // i2c_gyro = new I2C_2();
+  // uint8_t data=0,read=0;
+  // i2c_gyro->read(0xD0,0x75,&read);
+  // if(read == 0x68){
+  //   data = 0x00;
+  //   i2c_gyro->write(0xD0,0x6B,&data);
+  //   i2c_gyro->read(0xD0,0x6B,&read);
+  //   data = 0x12;
+  //   i2c_gyro->write(0xD0,0x1a,&data);
+  //   i2c_gyro->read(0xD0,0x1a,&read);
+  //   if(read == 0x12){
+  //     OutB->on(GPIO::PIN::PIN_5);
+  //   }else{
+  //     OutB->off(GPIO::PIN::PIN_5);
+  //   }
+  // }else{
+  //   OutB->off(GPIO::PIN::PIN_5);
+  // }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,30 +211,33 @@ int main(void)
   {
     OutB->set(GPIO::PIN::PIN_15,InA->read(GPIO::PIN::PIN_11));
     OutB->set(GPIO::PIN::PIN_14,InB->read(GPIO::PIN::PIN_12));
-    OutB->set(GPIO::PIN::PIN_1,(qei_tim2->read()&0x01)&&0x01);
-    OutB->set(GPIO::PIN::PIN_2,(qei_tim2->read()&0x10)&&0x10);
-    OutB->set(GPIO::PIN::PIN_3,(qei_tim3->read()&0x01)&&0x01);
-    OutB->set(GPIO::PIN::PIN_4,(qei_tim3->read()&0x10)&&0x10);
+    // OutB->set(GPIO::PIN::PIN_1,(qei_tim2->read()&0x01)&&0x01);
+    // OutB->set(GPIO::PIN::PIN_2,(qei_tim2->read()&0x10)&&0x10);
+    // OutB->set(GPIO::PIN::PIN_3,(qei_tim3->read()&0x01)&&0x01);
+    // OutB->set(GPIO::PIN::PIN_4,(qei_tim3->read()&0x10)&&0x10);
     if(!InA->read(GPIO::PIN::PIN_11)){
-      pwm_buz->output_n(TIM_CHANNEL_2,0.5);
-      pwm_tim5->output(TIM_CHANNEL_3,0.0);
+      // pwm_buz->output_n(TIM_CHANNEL_2,0.5);
+      // pwm_tim5->output(TIM_CHANNEL_3,0.0);
       pwm_tim8->output(TIM_CHANNEL_3,0.0);
-      pwm_tim5->output(TIM_CHANNEL_4,0.5);
+      // pwm_tim5->output(TIM_CHANNEL_4,0.5);
       pwm_tim8->output(TIM_CHANNEL_4,0.5);
     }else if(!InB->read(GPIO::PIN::PIN_12)){
-      pwm_buz->output_n(TIM_CHANNEL_2,0.5);
-      pwm_tim5->output(TIM_CHANNEL_3,0.5);
+      // pwm_buz->output_n(TIM_CHANNEL_2,0.5);
+      // pwm_tim5->output(TIM_CHANNEL_3,0.5);
       pwm_tim8->output(TIM_CHANNEL_3,0.5);
-      pwm_tim5->output(TIM_CHANNEL_4,0.0);
+      // pwm_tim5->output(TIM_CHANNEL_4,0.0);
       pwm_tim8->output(TIM_CHANNEL_4,0.0);
     }else{
-      pwm_buz->stop_n(TIM_CHANNEL_2);
-      pwm_tim5->output(TIM_CHANNEL_3,0.0);
+      // pwm_buz->stop_n(TIM_CHANNEL_2);
+      // pwm_tim5->output(TIM_CHANNEL_3,0.0);
       pwm_tim8->output(TIM_CHANNEL_3,0.0);
-      pwm_tim5->output(TIM_CHANNEL_4,0.0);
+      // pwm_tim5->output(TIM_CHANNEL_4,0.0);
       pwm_tim8->output(TIM_CHANNEL_4,0.0);
+      // pwm_tim5->stop(TIM_CHANNEL_3);
+      pwm_tim8->stop(TIM_CHANNEL_3);
+      // pwm_tim5->stop(TIM_CHANNEL_4);
+      // pwm_tim8->stop(TIM_CHANNEL_4);
     }
-    // HAL_Delay(100);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
