@@ -103,7 +103,6 @@ int main(void)
   InB = new Input(GPIOB,GPIO_PIN_12);
   OutB = new Output(GPIOB,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13|GPIO_PIN_14 
                           |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
-	uint8_t read=0;
 	uint8_t address=0x75;//WHO_AM_I
 	uint8_t config=0x12;
 	uint8_t set[]={0x1A,0x12};
