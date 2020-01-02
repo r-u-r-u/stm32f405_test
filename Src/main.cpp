@@ -45,6 +45,7 @@
 #include "../Library/GPIO/Input.h"
 #include "../Library/UART/UART_Simple.h"
 #include "../Library/I2C/I2C2.h"
+#include "../Library/GYRO/MPU6050.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -110,31 +111,18 @@ int main(void)
 
   I2C *i2c_gyro;
   i2c_gyro = new I2C_2();
-  uint8_t data=0,read=0;
-  i2c_gyro->read(0xD0,0x75,&read);
-  if(read == 0x68){
-    data = 0x00;
-    i2c_gyro->write(0xD0,0x6B,&data);
-    i2c_gyro->read(0xD0,0x6B,&read);
-    data = 0x12;
-    i2c_gyro->write(0xD0,0x1a,&data);
-    i2c_gyro->read(0xD0,0x1a,&read);
-    if(read == 0x12){
-      OutB->on(GPIO::PIN::PIN_5);
-    }else{
-      OutB->off(GPIO::PIN::PIN_5);
-    }
-  }else{
-    OutB->off(GPIO::PIN::PIN_5);
-  }
+  MPU6050 gyro(i2c_gyro);
+  OutB->set(GPIO::PIN::PIN_3,gyro.WhoAmI());
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    OutB->set(GPIO::PIN::PIN_15,InA->read(GPIO::PIN::PIN_11));
-    OutB->set(GPIO::PIN::PIN_14,InB->read(GPIO::PIN::PIN_12));
+    float theta = gyro.getAngleVelocity();
+    OutB->set(GPIO::PIN::PIN_3,InA->read(GPIO::PIN::PIN_11));
+    OutB->set(GPIO::PIN::PIN_2,InB->read(GPIO::PIN::PIN_12));
+    OutB->set(GPIO::PIN::PIN_1, 0.0 < theta );
     if(!InA->read(GPIO::PIN::PIN_11)){
     }else if(!InB->read(GPIO::PIN::PIN_12)){
     }else{
